@@ -35,6 +35,7 @@ import { seedUsers } from 'src/engine/workspace-manager/dev-seeder/core/utils/se
 import { createWorkspace } from 'src/engine/workspace-manager/dev-seeder/core/utils/seed-workspace.util';
 import { seedPageLayoutTabs } from 'src/engine/workspace-manager/dev-seeder/core/utils/seed-page-layout-tabs.util';
 import { seedPageLayoutWidgets } from 'src/engine/workspace-manager/dev-seeder/core/utils/seed-page-layout-widgets.util';
+import { seedNavigationMenuItems } from 'src/engine/workspace-manager/dev-seeder/core/utils/seed-navigation-menu-items.util';
 import { seedPageLayouts } from 'src/engine/workspace-manager/dev-seeder/core/utils/seed-page-layouts.util';
 import { DevSeederDataService } from 'src/engine/workspace-manager/dev-seeder/data/services/dev-seeder-data.service';
 import { DevSeederMetadataService } from 'src/engine/workspace-manager/dev-seeder/metadata/services/dev-seeder-metadata.service';
@@ -170,10 +171,20 @@ export class DevSeederService {
       applicationId: twentyStandardFlatApplication.id,
     });
 
+    await seedNavigationMenuItems(
+      this.coreDataSource,
+      'core',
+      workspaceId,
+      twentyStandardFlatApplication.id,
+    );
+
     const relatedPageLayoutCacheKeysToInvalidate = [
       ...getMetadataRelatedMetadataNames(ALL_METADATA_NAME.pageLayout),
       ...getMetadataRelatedMetadataNames(ALL_METADATA_NAME.pageLayoutTab),
       ...getMetadataRelatedMetadataNames(ALL_METADATA_NAME.pageLayoutWidget),
+      ...getMetadataRelatedMetadataNames(
+        ALL_METADATA_NAME.navigationMenuItem,
+      ),
     ].map(getMetadataFlatEntityMapsKey);
 
     await this.workspaceCacheService.invalidateAndRecompute(
